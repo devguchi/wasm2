@@ -1,30 +1,12 @@
 use wasm_bindgen::prelude::*;
 
-#[wasm_bindgen]
-extern "C" {
-    #[wasm_bindgen(js_namespace = console)]
-    fn log(s: &str);
-}
-
-#[wasm_bindgen]
-#[derive(Debug)]
-pub struct Counter {
-    key: char,
-    count: u32
-}
-
-#[wasm_bindgen]
-impl Counter {
-    pub fn new(key:char) -> Counter {
-        log(&format!("Counter::new({})", key));
-        Counter { key: key, count: 0 }
-    }
-
-    pub fn count(&self) -> u32 {
-        self.count
-     }
-     
-     pub fn increment(&mut self) {
-         self.count += 1;
-     }
+#[wasm_bindgen(start)]
+pub fn run() -> Result<(), JsValue> {
+    let window = web_sys::window().expect("no blobal 'window' exists");
+    let document = window.document().expect("should have a document on window");
+    let body = document.body().expect("document should have a body");
+    let p = document.create_element("p")?;
+    p.set_text_content(Some("Hello from Rust!"));
+    body.append_child(&p)?;
+    Ok(())
 }
